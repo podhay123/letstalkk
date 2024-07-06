@@ -1,0 +1,6 @@
+django
+black
+channels
+daphne
+channels-redis
+openai

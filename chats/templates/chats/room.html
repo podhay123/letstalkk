@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+</head>
+
+<body>
+    {{room_name|json_script:"room-name"}}
+    Feel bored? Don't know what to talk about? Why no ask AI?
+    <input id="ask-box" type="button" value="ask">
+    <br>
+    <textarea id="text-area" cols="150" rows="50"></textarea>
+    <br>
+    <input id="text-box" type="text">
+    <input id="submit-box" type="button" value="Submit">
+</body>
+<script>
+    const roomName = JSON.parse(document.querySelector("#room-name").textContent)
+    const chatSocket = new WebSocket(
+        "ws://"
+        + window.location.host
+        + "/ws/chat/"
+        + roomName
+        + '/'
+    )
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data)
+        console.log(data)
+        document.querySelector("#text-area").value += (data.message + "\n")
+
+    }
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+    document.querySelector("#submit-box").onclick = function (e) {
+        var message = document.querySelector("#text-box").value
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'generate_topic': false
+
+        }));
+    }
+    document.querySelector("#ask-box").onclick = function (e) {
+        var message = document.querySelector("#text-box").value
+        chatSocket.send(JSON.stringify({
+            'message': '',
+            'generate_topic': true
+        }));
+    }
+</script>
+
+</html>

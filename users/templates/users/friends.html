@@ -1,0 +1,21 @@
+YOUR POTENTIAL FRIENDS
+<br>
+<br>
+{% for friend in potential_friends %}
+{{friend}}
+<a href="{% url 'users:add_friend' friend.id %}">ADD</a>
+<br>
+
+{% endfor %}
+<br>
+<br>
+
+YOUR FRIENDS
+<br>
+<br>
+{% for friend in friends %}
+{{friend}}
+<a href="{% url 'users:remove_friend' friend.id %}">REMOVE</a>
+<a href="{% url 'users:start_chat' friend.id %}"> CHAT</a>
+<br>
+{% endfor %}
